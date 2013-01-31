@@ -13,7 +13,7 @@ module ActiveRecord::Associations::Builder
 
       reflection = super
 
-      create_join_association(reflection)
+      create_join_association(reflection) if need_to_create_join_association?(reflection)
       create_has_many_through_associations_for_children_to_parent(name, reflection)
       create_has_many_through_associations_for_parent_to_children(name, reflection)
 
@@ -54,6 +54,10 @@ module ActiveRecord::Associations::Builder
       }
 
       model.has_many(reflection.options[:through], options)
+    end
+
+    def need_to_create_join_association?(reflection)
+      model.reflections[reflection.options[:through]].nil?
     end
 
     def create_has_many_through_associations_for_children_to_parent(association_id, reflection)
