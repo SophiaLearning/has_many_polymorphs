@@ -1,11 +1,16 @@
 module ActiveRecord::Associations::Builder
   class HasManyPolymorphs < CollectionAssociation #:nodoc:
-    self.macro = :has_many_polymorphs
+    def self.macro
+      :has_many_polymorphs
+    end
 
-    self.valid_options += [:dependent, :as, :through, :source, :source_type,
-      :join_class_name, :from, :association_foreign_key, :polymorphic_key,
-      :polymorphic_type_key, :join_extend, :parent_extend, :table_aliases,
-      :rename_individual_collections]
+    def self.valid_options
+      super + [:dependent, :as, :through, :source, :source_type,
+        :join_class_name, :from, :association_foreign_key, :polymorphic_key,
+        :polymorphic_type_key, :join_extend, :parent_extend, :table_aliases,
+        :rename_individual_collections]
+    end
+
 
 
     def build
