@@ -96,16 +96,18 @@ module ActiveRecord::Associations::Builder
           association += "_of_#{association_id}" if reflection.options[:rename_individual_collections]
 
           has_many(association.to_sym,
+            Proc.new do
+              where(reflection.options[:parent_conditions])
+                .order(reflection.options[:parent_order])
+                .offset(reflection.options[:parent_offset])
+                .limit(reflection.options[:parent_limit])
+                .group(reflection.options[:parent_group])
+            end,
             :through     => through,
             :class_name  => parent.name,
             :source      => reflection.options[:as],
             :foreign_key => reflection.options[:foreign_key],
-            :extend      => reflection.options[:parent_extend],
-            :conditions  => reflection.options[:parent_conditions],
-            :order       => reflection.options[:parent_order],
-            :offset      => reflection.options[:parent_offset],
-            :limit       => reflection.options[:parent_limit],
-            :group       => reflection.options[:parent_group]
+            :extend      => reflection.options[:parent_extend]
           )
         end
       end
