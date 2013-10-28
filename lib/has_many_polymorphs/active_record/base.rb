@@ -53,7 +53,7 @@ module ActiveRecord
             obj.run_callbacks :initialize
           end
         else
-          instantiate_without_polymorphic_checks(record)
+          instantiate_without_polymorphic_checks(record, args)
         end
       end
       alias_method_chain :instantiate, :polymorphic_checks
