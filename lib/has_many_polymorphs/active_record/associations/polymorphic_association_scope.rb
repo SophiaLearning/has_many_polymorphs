@@ -2,6 +2,9 @@ module ActiveRecord
   module Associations
     class PolymorphicAssociationScope < AssociationScope
       def add_constraints(scope)
+        #code from rails3. whithout it no select options whould be aplied to the query
+        scope = scope.apply_finder_options(options.slice(
+          :readonly, :include, :order, :limit, :joins, :group, :having, :offset, :select))
         scope.joins(construct_joins).where(construct_conditions)
       end
 
@@ -48,8 +51,8 @@ module ActiveRecord
       # and build sql
       def default_where(klass)
         sql          = ''
-        arel_nodes   = klass.scoped.with_default_scope.where_values.grep(Arel::Nodes::Equality)
-        string_nodes = klass.scoped.with_default_scope.where_values.grep(String)
+        arel_nodes   = klass.all.with_default_scope.where_values.grep(Arel::Nodes::Equality)
+        string_nodes = klass.all.with_default_scope.where_values.grep(String)
 
         unless arel_nodes.empty?
           sql += arel_nodes.inject(arel_nodes[0]) do |arel, equality|

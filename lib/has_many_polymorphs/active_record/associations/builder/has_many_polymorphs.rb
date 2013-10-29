@@ -137,12 +137,12 @@ module ActiveRecord::Associations::Builder
 
         model.has_many(
           current_association.to_sym,
+          -> { order reflection.options[:order] },
           :through     => reflection.options[:through],
           :source      => association_id._singularize,
           :source_type => plural._as_class.base_class.name,
           :class_name  => plural._as_class.name, # make STI not conflate subtypes
-          :extend      => (Array(extension_module)),
-          :order       => reflection.options[:order]
+          :extend      => (Array(extension_module))
          )
       end
     end
