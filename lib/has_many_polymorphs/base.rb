@@ -12,7 +12,7 @@ module HasManyPolymorphs
     module ClassMethods
       def has_many_polymorphs(association_id, options = {}, &extension)
         scope = nil #we are not going to use any scope with has_many_polymorphs
-        ActiveRecord::Associations::Builder::HasManyPolymorphs.build(self, association_id, options, scope, &extension)
+        ActiveRecord::Associations::Builder::HasManyPolymorphs.build(self, association_id, scope, options, &extension)
       end
     end
   end
