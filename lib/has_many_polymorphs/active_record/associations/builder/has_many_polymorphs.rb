@@ -200,8 +200,8 @@ module ActiveRecord::Associations::Builder
 
     def build_select(association_id, aliases)
       # <tt>instantiate</tt> has to know which reflection the results are coming from
-      (["\'#{@model.name}\' AS polymorphic_parent_class",
-         "\'#{association_id}\' AS polymorphic_association_id"] +
+      (["\'#{@model.name}\'::character(255) AS polymorphic_parent_class",
+         "\'#{association_id}\'::character(255) AS polymorphic_association_id"] +
       aliases.map do |table, _alias|
         "#{table} AS #{_alias}"
       end.sort).join(", ")

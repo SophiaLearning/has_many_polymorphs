@@ -6,8 +6,9 @@ module ActiveRecord
       # ActiveRecord::Base.instantiate_without_callbacks.
       def instantiate_with_polymorphic_checks(record, column_types = {})
         if record['polymorphic_parent_class']
-          reflection = record['polymorphic_parent_class'].constantize.reflect_on_association(
-            record['polymorphic_association_id'].to_sym
+          parent_class, association_id = record['polymorphic_parent_class'].rstrip, record['polymorphic_association_id'].rstrip
+          reflection = parent_class.constantize.reflect_on_association(
+            association_id.to_sym
           )
           # _logger_debug "Instantiating a polymorphic row for #{
           #   record['polymorphic_parent_class']
