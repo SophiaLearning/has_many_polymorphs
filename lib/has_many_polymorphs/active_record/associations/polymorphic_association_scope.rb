@@ -3,10 +3,8 @@ module ActiveRecord
     class PolymorphicAssociationScope < AssociationScope
       def add_constraints(scope)
         #code from rails3. whithout it no select options whould be aplied to the query
-        silence_warnings do
-          scope = scope.apply_finder_options(options.slice(
-            :readonly, :include, :order, :limit, :joins, :group, :having, :offset, :select))
-        end
+        scope = scope.apply_finder_options(options.slice(
+          :readonly, :include, :order, :limit, :joins, :group, :having, :offset, :select))
         scope.joins(construct_joins).where(construct_conditions)
       end
 
