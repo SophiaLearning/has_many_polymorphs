@@ -2,13 +2,21 @@ module ActiveRecord
   module Associations
     class PolymorphicAssociationScope < AssociationScope
       def add_constraints(scope)
-        #code from rails3. whithout it no select options whould be aplied to the query
-        scope = scope.apply_finder_options(options.slice(
-          :readonly, :include, :order, :limit, :joins, :group, :having, :offset, :select))
+        scope = apply_options_to_scope(scope)
         scope.joins(construct_joins).where(construct_conditions)
       end
 
       private
+
+      def apply_options_to_scope(scope)
+        finders = options.slice(:readonly, :include, :order, :limit, :joins, :group, :having, :offset, :select)
+        finders.delete_if { |key, value| value.nil? && key != :limit }
+        ([:joins, :select, :group, :order, :having, :limit, :offset, :from, :lock, :readonly] & finders.keys).each do |finder|
+          scope = scope.send(finder, finders[finder])
+        end
+        scope = scope.includes(finders[:include]) if options.has_key?(:include)
+        scope
+      end
 
       def construct_from #:nodoc:
         # build the FROM part of the query, in this case, the polymorphic join table
